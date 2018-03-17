@@ -1,30 +1,35 @@
 let express = require('express');
-let goods = require('../controls/goods');
-let user = require('../controls/user');
+let activity = require('../controls/activity');
+let user = require('../controls/user_info');
+let club = require('../controls/club');
 let api = require('../api');
 let upload = require('../utils/upload');
 
 
 let router = express.Router();
 
-// goods
-router.get(api.goodsList, goods.fetchAll);
+// activity
+router.get(api.activityList, activity.fetchAll);
+router.post(api.activityDetail, activity.fetchById);
+router.post(api.activityAdd, activity.addOne);
+router.post(api.activityDelete, activity.deleteOne);
 
-router.post(api.goodsDetail, goods.fetchById);
-router.post(api.goodsAdd, goods.addOne);
-router.post(api.goodsDelete, goods.deleteOne);
-router.post(api.goodsDeleteMulti, goods.deleteMulti);
-router.post(api.goodsUploadImg, upload.single('avatar'),goods.uploadGoodsImg); // 图片上传
+
+// club
+router.get(api.clubList, club.fetchAll);
+router.post(api.clubDetail, club.fetchById);
+router.post(api.clubAdd, club.addOne);
+router.post(api.joinClub, club.joinClub);
+router.post(api.clubDelete, club.deleteOne);
+
 
 // user
 router.get(api.userList, user.fetchAll);
 router.get(api.userLogout, user.logout);
 router.get(api.userAutoLogin, user.autoLogin); // 自动登录
 
-router.post(api.userAdd, user.addOne);
 router.post(api.userDelete, user.deleteOne);
-router.post(api.userDeleteMulti, user.deleteMulti);
 router.post(api.userLogin, user.login); // 登录
-router.post(api.userChangeRole, user.controlVisit, user.changeRole); // 更改权限
+router.post(api.userRegister, user.register); // 注册
 
 module.exports = router;

@@ -9,50 +9,55 @@
             tooltip-effect="dark"
             style="width: 100%">
             <el-table-column
-                type="selection">
+                type="selection" header-align="center" align="center">
             </el-table-column>
 
             <el-table-column
                 prop="name"
-                label="商品名">
+                label="活动名称" header-align="center" align="center">
+            </el-table-column>
+
+            <el-table-column
+                prop="creator"
+                label="活动发起人" header-align="center" align="center">
             </el-table-column>
 
             <el-table-column
                 width="160"
-                label="添加日期">
-                <template scope="scope">
+                label="活动开始日期">
+                <template scope="scope" header-align="center" align="center">
                     <el-icon name="time"></el-icon>
-                    <span style="margin-left: 10px">{{ scope.row.create_time }}</span>
+                    <span style="margin-left: 10px">{{ scope.row.start_time }}</span>
                 </template>
             </el-table-column>
 
             <el-table-column
-                label="价格">
+                width="160"
+                label="活动结束日期" header-align="center" align="center">
                 <template scope="scope">
-                    {{ scope.row.price }}元
+                    <el-icon name="time"></el-icon>
+                    <span style="margin-left: 10px">{{ scope.row.end_time }}</span>
                 </template>
             </el-table-column>
 
-
-            <el-table-column label="操作">
+            <el-table-column label="操作" header-align="center" align="center">
                 <template scope="scope">
                     <el-button
                         size="small"
-                        @click="editGoods(scope.row)">修改商品
-                    </el-button>
-                    <el-button
-                        size="small"
                         type="danger"
-                        @click="handleDelete(scope.row)">删除商品
+                        @click="handleDelete(scope.row)">删除活动
                     </el-button>
+
                 </template>
             </el-table-column>
 
         </el-table>
-        <div class="btns">
-            <el-button type="success">批量上架</el-button>
+        <!-- <div class="btns">
+            <router-link to="/admin/user-form">
+                <el-button type="success">新增用户</el-button>
+            </router-link>
             <el-button type="danger" @click="deleteMulti">批量删除</el-button>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -63,16 +68,28 @@
         data() {
             return {
                 tableData: [],
+
                 multipleSelection: [],
+
+                curRow: null,
 
                 load: false, // loading
             }
         },
 
         methods: {
+            fetchList () {
+                this.load = true;
+
+                this.func.ajaxGet(this.api.activityList, res => {
+                    this.tableData = res.data.activities;
+                    this.load = false;
+                });
+            },
+
             // 删除
             handleDelete(row) {
-                this.func.ajaxPost(this.api.goodsDelete, {id: row.id}, res => {
+                this.func.ajaxPost(this.api.activityDelete, {id: row.Id}, res => {
                     if (res.data.code === 200) {
                         let index = this.tableData.indexOf(row);
                         this.tableData.splice(index, 1);
@@ -81,18 +98,13 @@
                 });
             },
 
-            // 修改
-            editGoods (row) {
-                this.$router.push({path: '/admin/goods-form', query: {id: row.id}});
-            },
-
             deleteMulti () {
                 let multi = this.multipleSelection
                 let id = multi.map(el => {
                     return el.id;
                 });
 
-                this.func.ajaxPost(this.api.deleteMulti, {id}, res => {
+                this.func.ajaxPost(this.api.userDeleteMulti, {id}, res => {
                     if (res.data.code === 200) {
                         this.$message.success('删除成功');
                         multi.forEach(el => {
@@ -109,12 +121,7 @@
         },
 
         created () {
-            this.load = true;
-
-            this.func.ajaxGet(this.api.goodsList, res => {
-                this.tableData = res.data.goods;
-                this.load = false;
-            });
+            this.fetchList();
         },
 
 

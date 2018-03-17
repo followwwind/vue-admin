@@ -6,31 +6,44 @@
             <div class='admin-main-right'>
                 <el-menu theme="dark" class="top-menu">
                     <el-submenu index="1">
-                        <template slot="title">商品管理</template>
-                        <router-link to="/admin/goods-list">
-                            <el-menu-item index="1-1">商品列表</el-menu-item>
+                        <template slot="title">会员</template>
+                        <router-link to="/admin/club-join">
+                            <el-menu-item index="1-1">加入社团</el-menu-item>
                         </router-link>
 
-                        <router-link to="/admin/goods-form">
-                            <el-menu-item index="1-2">新增商品</el-menu-item>
+                        <router-link to="/admin/activity-list">
+                            <el-menu-item index="1-2">最新活动</el-menu-item>
                         </router-link>
                     </el-submenu>
 
                     <el-submenu index="2">
-                        <template slot="title">用户管理</template>
+                        <template slot="title">管理员</template>
                         <el-menu-item index="2-1"
-                                      @click="controlJump('/admin/user-list')">用户列表
+                                      @click="controlJump('/admin/activity-form')">发布活动
                         </el-menu-item>
 
                         <el-menu-item index="2-2"
-                                      @click="controlJump('/admin/user-form')">新增用户
+                                      @click="controlJump('/admin/user-list')">成员管理
+                        </el-menu-item>
+                        <el-menu-item index="2-3"
+                                      @click="controlJump('/admin/club-form')">注册社团
+                        </el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="3">
+                        <template slot="title">教师</template>
+                        <el-menu-item index="2-1"
+                                      @click="controlJump('/admin/club-list')">社团管理
+                        </el-menu-item>
+
+                        <el-menu-item index="2-2"
+                                      @click="controlJump('/admin/user-list')">成员管理
                         </el-menu-item>
                     </el-submenu>
                 </el-menu>
             </div>
 
             <div class='admin-main-left'>
-                <router-view></router-view>
+                <router-view v-bind:user="user"></router-view>
             </div>
 
         </div>
@@ -50,9 +63,13 @@
         computed: {
             user () {
                 return this.$store.state.user;
-            },
+            }
         },
-
+        data (){
+            return {
+                //user: this.user
+            }
+        },
         methods: {
             // 跳转控制
             controlJump (target) {

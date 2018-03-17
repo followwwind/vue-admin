@@ -2,8 +2,14 @@ import Vue from "vue";
 import Router from "vue-router";
 import Admin from "../components/admin.vue";
 import Login from "../components/common/login.vue";
-import GoodsForm from "../components/goods/goods-form.vue";
-import GoodsList from "../components/goods/goods-list.vue";
+import Register from "../components/common/register.vue";
+import Index from "../components/index.vue";
+import ClubForm from "../components/club/club-form.vue";
+import ClubList from "../components/club/club-list.vue";
+import ClubJoin from "../components/club/club-join.vue";
+import ClubInfo from "../components/club/club-info.vue";
+import ActivityForm from "../components/activity/activity-form.vue";
+import ActivityList from "../components/activity/activity-list.vue";
 import UserForm from "../components/user/user-form.vue";
 import UserList from "../components/user/user-list.vue";
 
@@ -13,30 +19,54 @@ export default new Router({
     routes: [
         {
             path: '/admin',
-            redirect: '/admin/goods-list',
+            redirect: '/admin/index',
             component: Admin,
             children: [
                 {
-                    path: '/admin/goods-list',
-                    component: GoodsList,
+                    path: '/admin/index',
+                    component: Index
                 },
                 {
-                    path: '/admin/goods-form',
-                    component: GoodsForm,
+                    path: '/admin/club-form',
+                    component: ClubForm
+                },
+                {
+                    path: '/admin/club-list',
+                    component: ClubList
+                },
+                {
+                    path: '/admin/club-join',
+                    component: ClubJoin
+                },
+                {
+                    path: '/admin/club-info',
+                    component: ClubInfo
+                },
+                {
+                    path: '/admin/activity-form',
+                    component: ActivityForm
+                },
+                {
+                    path: '/admin/activity-list',
+                    component: ActivityList
                 },
                 {
                     path: '/admin/user-list',
-                    component: UserList,
+                    component: UserList
                 },
                 {
                     path: '/admin/user-form',
-                    component: UserForm,
+                    component: UserForm
                 },
             ]
         },
         {
             path: '/',
-            component: Login,
+            component: Login
         },
+        {
+            path: '/register',
+            component: Register
+        }
     ]
 });

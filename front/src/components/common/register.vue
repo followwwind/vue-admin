@@ -1,19 +1,25 @@
 <template>
-    <div class="login">
+    <div class="register">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="login-form">
-            <el-form-item label="账号" prop="user_name">
-                <el-input type="text" v-model="loginForm.user_name" auto-complete="off"></el-input>
+            <el-form-item label="账号" prop="name">
+                <el-input type="text" v-model="loginForm.name" auto-complete="off"></el-input>
             </el-form-item>
 
             <el-form-item label="密码" prop="pass">
                 <el-input type="password" v-model="loginForm.pass" auto-complete="off"></el-input>
             </el-form-item>
 
+            <el-form-item label="类型">
+                <el-radio-group v-model="loginForm.type">
+                  <el-radio label="2">会员</el-radio>
+                  <el-radio label="1">教师</el-radio>
+                  <el-radio label="0">管理员</el-radio>
+                </el-radio-group>
+            </el-form-item>
+
             <el-form-item>
-                <label @click="toRegister()" style="cursor:pointer;border-bottom: 1px solid white;line-height:30px;color:white">
-                    没有账号？去注册
-                </label>
-                <el-button type="primary" @click="submitForm('loginForm')" style="float:right">登陆</el-button>
+                <el-button type="info" @click="register('loginForm')">注册</el-button>
+                <el-button type="primary" @click="cancel('loginForm')" style="float:right">返回</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -27,8 +33,9 @@
         data() {
             return {
                 loginForm: {
-                    user_name: '',
+                    name: '',
                     pass: '',
+                    type: '2'
                 },
                 rules: {
                     user_name: [{required: true, message: '请输入用户名', trigger: 'blur'}],
@@ -38,16 +45,15 @@
         },
         
         methods: {
-            submitForm(formName) {
+            register(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        this.func.ajaxPost(this.api.userLogin, this.loginForm, res => {
+                        console.log(this.loginForm);
+                        this.func.ajaxPost(this.api.clubAdd, this.loginForm, res => {
 
                             if (res.data.code === 200) {
-                                this.$store.commit('user', res.data.user);
-                                console.log(res.data.user);
-                                this.$message.success('登陆成功');
-                                this.$router.push('/admin');
+                                this.$message.success('注册成功');
+                                this.$router.push('/');
 
                             }
 
@@ -57,8 +63,8 @@
                 });
             },
             
-            toRegister(formName) {
-                this.$router.push('/register');
+            cancel(formName) {
+                this.$router.push('/');
             }
         },
 

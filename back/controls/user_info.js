@@ -8,15 +8,15 @@ function formatData(rows) {
         let date = moment(row.create_time).format('YYYY-MM-DD');
         let obj = {};
 
-        switch (row.role) {
+        switch (row.type) {
+            case 0:
+                obj.type = '管理员';
+                break;
             case 1:
-                obj.role = '普通用户';
+                obj.type = '教师';
                 break;
-            case 10:
-                obj.role = '管理员';
-                break;
-            case 100:
-                obj.role = '超级管理员';
+            case 2:
+                obj.type = '会员';
         }
 
         delete row.password;
@@ -28,7 +28,7 @@ function formatData(rows) {
 module.exports = {
 
     fetchAll (req, res) {
-        func.connPool(sql.queryAll, 'user', (err, rows) => {
+        func.connPool(sql.queryAll, 'user_info', (err, rows) => {
             rows = formatData(rows);
             res.json({code: 200, msg: 'ok', users: rows});
         });
@@ -39,8 +39,8 @@ module.exports = {
     addOne (req, res) {
         let name = req.body.name;
         let pass = req.body.pass;
-        let role = req.body.role;
-        let query = 'INSERT INTO user(user_name, password, role) VALUES(?, ?, ?)';
+        let type = req.body.type;
+        let query = 'INSERT INTO user(user_name, password, type) VALUES(?, ?, ?)';
 
         // 密码加盐
         bcrypt.hash(pass, 10, (err, hash) => {
@@ -64,7 +64,7 @@ module.exports = {
 
         let id = req.body.id;
 
-        func.connPool(sql.del, ['user', id], rows => {
+        func.connPool(sql.del, ['user_info', id], rows => {
             res.json({code: 200, msg: 'done'});
         });
 
@@ -74,7 +74,7 @@ module.exports = {
     deleteMulti (req, res) {
         let id = req.body.id;
 
-        func.connPool('DELETE FROM user WHERE id IN ?', [[id]], rows => {
+        func.connPool('DELETE FROM user_info WHERE id IN ?', [[id]], rows => {
             res.json({code: 200, msg: 'done'});
         });
 
@@ -85,7 +85,7 @@ module.exports = {
         let user_name = req.body.user_name;
         let pass = req.body.pass;
 
-        func.connPool('SELECT * from user where user_name = ?', [user_name], (err, rows) => {
+        func.connPool('SELECT * from user_info where user_name = ?', [user_name], (err, rows) => {
 
             if (!rows.length) {
                 res.json({code: 400, msg: '用户名不存在'});
@@ -96,9 +96,9 @@ module.exports = {
             bcrypt.compare(pass, password, (err, sure) => {
                 if (sure) {
                     let user = {
-                        user_id: rows[0].user_id,
+                        user_id: rows[0].id,
                         user_name: rows[0].user_name,
-                        role: rows[0].role,
+                        type: rows[0].type,
                     };
 
                     req.session.login = user;
@@ -111,6 +111,28 @@ module.exports = {
 
         });
 
+    },
+
+    register (req, res) {
+        let name = req.body.name;
+        let pass = req.body.pass;
+        let type = req.body.type;
+        let query = 'INSERT INTO user_info(user_name, password, type) VALUES(?, ?, ?)';
+
+        // 密码加盐
+        bcrypt.hash(pass, 10, (err, hash) => {
+            if (err) console.log(err);
+
+            pass = hash;
+
+            let arr = [name, pass, type];
+
+            func.connPool(query, arr, (err, rows) => {
+                console.log(rows);
+                res.json({code: 200, msg: 'done'});
+            });
+
+        });
     },
 
 
@@ -130,37 +152,5 @@ module.exports = {
         req.session.login = null;
 
         res.json({code: 200, msg: '注销'});
-    },
-
-    // 权限控制
-    controlVisit (req, res, next) {
-        if (req.session.login.role && req.session.login.role < 10) {
-            res.json({code: 400, msg: '权限不够'});
-            return;
-        }
-
-        next();
-    },
-
-    // 权限变更
-    changeRole (req, res) {
-        let role = req.session.login.role;
-        let change_role = req.body.change_role;
-
-        if (role !== 100 && change_role === 100) {
-            res.json({code: 400, msg: '权限不够'});
-            return;
-        }
-
-        let user_id = req.body.id;
-
-        func.connPool('UPDATE user SET role= ? WHERE id = ?', [change_role, user_id], rows => {
-            console.log(rows);
-            if (rows.affectedRows) {
-                res.json({code: 200, msg: 'done'});
-            }
-        });
-
-    },
-
+    }
 };

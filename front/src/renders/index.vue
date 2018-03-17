@@ -7,8 +7,7 @@
 <script>
 
     export default {
-        name: 'index',
-
+        name: 'app',
         created () {
             this.func.ajaxGet(this.api.userAutoLogin, res => {
                 if (res.data.code === 200) {

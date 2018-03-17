@@ -7,14 +7,25 @@
             :data="tableData"
             border
             tooltip-effect="dark"
-            style="width: 100%">
+            style="width: 100%"
+            >
             <el-table-column
-                type="selection">
+                type="selection" >
             </el-table-column>
 
             <el-table-column
-                prop="user_name"
-                label="用户名" header-align="center" align="center">
+                prop="name"
+                label="社团名称" header-align="center" align="center">
+            </el-table-column>
+
+            <el-table-column
+                prop="creator"
+                label="创建人" header-align="center" align="center">
+            </el-table-column>
+
+            <el-table-column
+                prop="count"
+                label="社团人数" header-align="center" align="center">
             </el-table-column>
 
             <el-table-column
@@ -26,35 +37,19 @@
                 </template>
             </el-table-column>
 
-            <el-table-column
-                prop="type"
-                label="用户类型" header-align="center" align="center">
-            </el-table-column>
-
-
             <el-table-column label="操作" header-align="center" align="center">
                 <template scope="scope">
-
-                    <!-- <el-dropdown trigger="click" @command="changeRole">
-                        <el-button size="small"
-                                   @click='curRow = scope.row'>
-                            修改权限<i class="el-icon-caret-bottom el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for='role in roles'
-                                              :key='role.val'
-                                              :command="role.val"
-                                              :disabled="scope.row.role == role.txt">{{ role.txt }}
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown> -->
-
                     <el-button
                         size="small"
                         type="danger"
-                        @click="handleDelete(scope.row)">删除用户
+                        @click="handleDelete(scope.row)">删除
                     </el-button>
 
+                    <el-button
+                        size="small"
+                        type="info"
+                        @click="info(scope.row)">详情
+                    </el-button>
                 </template>
             </el-table-column>
 
@@ -76,6 +71,8 @@
             return {
                 tableData: [],
 
+                multipleSelection: [],
+
                 curRow: null,
 
                 load: false, // loading
@@ -86,22 +83,27 @@
             fetchList () {
                 this.load = true;
 
-                this.func.ajaxGet(this.api.userList, res => {
-                    this.tableData = res.data.users;
-                    //console.log(this.tableData);
+                this.func.ajaxGet(this.api.clubList, res => {
+                    this.tableData = res.data.clubs;
                     this.load = false;
                 });
             },
 
             // 删除
             handleDelete(row) {
-                this.func.ajaxPost(this.api.userDelete, {id: row.Id}, res => {
+                this.func.ajaxPost(this.api.clubDelete, {id: row.Id}, res => {
                     if (res.data.code === 200) {
                         let index = this.tableData.indexOf(row);
                         this.tableData.splice(index, 1);
                         this.$message.success('删除成功');
                     }
                 });
+            },
+
+            // 查看详情
+            info (row) {
+                console.log(row);
+                this.$router.push({path: '/admin/club-info', params:{club_id: row.id}, query: { club_id: row.id}});
             },
 
             deleteMulti () {

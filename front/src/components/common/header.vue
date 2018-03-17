@@ -2,7 +2,9 @@
     header
         .wrap.header-wrap
             .logo
-                img(src='../../assets/imgs/logo.svg')
+                a(href="javascript:void(0)")(@click='toIndex')
+                    img(src='../../assets/imgs/logo.svg')
+            h1(style='font-size:20px;color:white;') 欢迎登陆*******社团管理系统
             .header-links
                 li
                     button.btn(@click='login') {{ user ? user.user_name : '登录' }}
@@ -35,6 +37,11 @@
                     }
                 });
             },
+            toIndex (){
+                if (this.user) {
+                    this.$router.push('/admin/index');
+                }
+            }
         }
 
     }
