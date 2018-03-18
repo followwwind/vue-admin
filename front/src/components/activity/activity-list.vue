@@ -74,13 +74,19 @@
                 curRow: null,
 
                 load: false, // loading
+                type: ''
+            }
+        },
+
+        computed: {
+            user () {
+                return this.$store.state.user;
             }
         },
 
         methods: {
             fetchList () {
                 this.load = true;
-
                 this.func.ajaxGet(this.api.activityList, res => {
                     this.tableData = res.data.activities;
                     this.load = false;

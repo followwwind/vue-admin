@@ -34,13 +34,14 @@
                 clubs: [],
                 form: {
                     club_id: '',
-                    user_id: ''
+                    user_id: '',
+                    status: 0
                 }
             }
         },
         methods: {
             fetchList () {
-                this.func.ajaxGet(this.api.clubs, {status: 1}, res => {
+                this.func.ajaxPost(this.api.clubs, {status: 1}, res => {
                     if (res.data.code === 200) {
                         //console.log(res.data.activities);
                         this.clubs = res.data.clubs;

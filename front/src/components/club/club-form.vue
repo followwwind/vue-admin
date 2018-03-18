@@ -41,7 +41,8 @@
                     name: '',
                     info: '',
                     count: '',
-                    creator: ''
+                    creator: '',
+                    status: 0
                 }  
             }
         },

@@ -27,6 +27,7 @@ module.exports = {
     //根据状态查询社团信息
     fetchList (req, res) {
         let status = req.body.status;
+        console.log(status);
         func.connPool("select * from club where status = ?", [status], (err, rows) => {
             rows = formatData(rows);
             res.json({code: 200, msg: 'ok', clubs: rows});
