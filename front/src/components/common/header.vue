@@ -4,6 +4,7 @@
             .logo
                 a(href="javascript:void(0)")(@click='toIndex')
                     img(src='../../assets/imgs/logo.svg')
+                    //h1(style='font-size:20px;color:white;') 返回首页
             h1(style='font-size:20px;color:white;') 欢迎登陆*******社团管理系统
             .header-links
                 li

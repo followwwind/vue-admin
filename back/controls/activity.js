@@ -25,7 +25,7 @@ module.exports = {
 
     fetchById (req, res){
         let id = req.body.id;
-        func.connPool("SELECT * FROM activity where id", [id], (err, rows) => {
+        func.connPool("SELECT * FROM activity where id =", [id], (err, rows) => {
             res.json({code: 200, msg: 'ok', activity: rows[0]});
         });
     },
@@ -35,24 +35,28 @@ module.exports = {
         let name = req.body.name;
         let creator = req.body.creator;
         let info = req.body.info;
+        let club_id = req.body.club_id;
         let start_time = moment(req.body.start_time).format('YYYY-MM-DD hh:mm:ss');
         let end_time = moment(req.body.end_time).format('YYYY-MM-DD hh:mm:ss');
-        let query = 'INSERT INTO activity(name, creator, info, start_time, end_time) VALUES(?, ?, ?, ?, ?)';
+        let query = 'INSERT INTO activity(name, creator, club_id, info, start_time, end_time) VALUES(?, ?, ?, ?, ?, ?)';
 
-        let arr = [name, creator, info, start_time, end_time];
-        func.connPool(query, arr, rows => {
+        let arr = [name, creator, club_id, info, start_time, end_time];
+        func.connPool(query, arr, (err, rows) => {
             res.json({code: 200, msg: 'done'});
         });
 
     },
 
 
-    // 删除用户
+    // 删除活动
     deleteOne (req, res) {
 
         let id = req.body.id;
-
-        func.connPool(sql.del, ['activity', id], rows => {
+        func.connPool(sql.del, ['activity', id], (err, rows) => {
+            if(err){
+                console.log('[DELETE ERROR] - ',err.message);
+                return;
+            }    
             res.json({code: 200, msg: 'done'});
         });
 

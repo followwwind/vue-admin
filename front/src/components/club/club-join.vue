@@ -40,7 +40,7 @@
         },
         methods: {
             fetchList () {
-                this.func.ajaxGet(this.api.clubList, res => {
+                this.func.ajaxGet(this.api.clubs, {status: 1}, res => {
                     if (res.data.code === 200) {
                         //console.log(res.data.activities);
                         this.clubs = res.data.clubs;

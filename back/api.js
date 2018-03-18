@@ -9,10 +9,20 @@ module.exports = {
 
     //club
     clubList: path + '/club/list',
+    clubs: path + '/club/findlist',
     clubDetail: path + '/club/detail',
     clubDelete: path + '/club/delete',
+    deleteClubUser: path + '/club/deleteClubUser',
+    update: path + '/club/update',
+    updateClubUser: path + '/club/updateClubUser',
     joinClub: path + '/club/joinClub',
     clubAdd: path + '/club/add',
+
+
+    // word
+    wordList: path + '/word/list',
+    wordDelete: path + '/word/delete',
+    wordAdd: path + '/word/add',
     
 
     // user

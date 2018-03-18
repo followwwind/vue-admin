@@ -49,7 +49,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         console.log(this.loginForm);
-                        this.func.ajaxPost(this.api.clubAdd, this.loginForm, res => {
+                        this.func.ajaxPost(this.api.userRegister, this.loginForm, res => {
 
                             if (res.data.code === 200) {
                                 this.$message.success('注册成功');

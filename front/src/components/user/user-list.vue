@@ -95,7 +95,7 @@
 
             // 删除
             handleDelete(row) {
-                this.func.ajaxPost(this.api.userDelete, {id: row.Id}, res => {
+                this.func.ajaxPost(this.api.userDelete, {id: row.id}, res => {
                     if (res.data.code === 200) {
                         let index = this.tableData.indexOf(row);
                         this.tableData.splice(index, 1);

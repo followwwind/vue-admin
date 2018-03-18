@@ -49,6 +49,8 @@
                                 this.$message.success('登陆成功');
                                 this.$router.push('/admin');
 
+                            }else{
+                                this.$message.success('账号或密码错误!!!');
                             }
 
                         });

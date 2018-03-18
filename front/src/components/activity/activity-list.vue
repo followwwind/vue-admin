@@ -89,7 +89,8 @@
 
             // 删除
             handleDelete(row) {
-                this.func.ajaxPost(this.api.activityDelete, {id: row.Id}, res => {
+                //console.log(row.id);
+                this.func.ajaxPost(this.api.activityDelete, {id: row.id}, res => {
                     if (res.data.code === 200) {
                         let index = this.tableData.indexOf(row);
                         this.tableData.splice(index, 1);
@@ -104,7 +105,7 @@
                     return el.id;
                 });
 
-                this.func.ajaxPost(this.api.userDeleteMulti, {id}, res => {
+                this.func.ajaxPost(this.api.activityDeleteMulti, {id}, res => {
                     if (res.data.code === 200) {
                         this.$message.success('删除成功');
                         multi.forEach(el => {

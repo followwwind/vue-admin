@@ -1,5 +1,13 @@
 <template>
     <el-form ref="form" :model="form" label-width="80px" class="form-contain" style="margin-top: 100px;">
+        <el-form-item label="所属社团">
+            <el-select v-model="form.club_id" placeholder="请选择社团" style="width:100%">
+                <el-option v-for="item in clubs"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item label="活动名称">
             <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -34,21 +42,37 @@
                 return this.$store.state.user;
             }
         },
+        created () {
+            this.fetchList();
+        },
         data() {
             return {
                 form: {
                     name: '',
+                    club_id:'',
                     info: '',
                     start_time: "",
                     end_time: "",
                     creator: ''
-                }  
+                },
+                clubs:[]  
             }
         },
         methods: {
             onSubmit () {
+
+                if (!this.form.club_id) {
+                    this.$message.warning('请选择所属社团');
+                    return;
+                }
+
                 if (!this.form.name) {
-                    this.$message.warning('请填写完整信息');
+                    this.$message.warning('请填写活动名称');
+                    return;
+                }
+
+                if (!this.form.info) {
+                    this.$message.warning('请填写活动介绍');
                     return;
                 }
 
@@ -65,6 +89,14 @@
             onCancel () {
                 this.$router.push('/admin/activity-list');
             },
+            fetchList () {
+                this.func.ajaxGet(this.api.clubList, res => {
+                    if (res.data.code === 200) {
+                        //console.log(res.data.activities);
+                        this.clubs = res.data.clubs;
+                    }
+                });
+            }
 
         },
 

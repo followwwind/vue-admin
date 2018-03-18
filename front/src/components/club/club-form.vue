@@ -49,7 +49,17 @@
             onSubmit () {
                 //console.log(this.user);
                 if (!this.form.name) {
-                    this.$message.warning('请填写完整信息');
+                    this.$message.warning('请填写社团名称');
+                    return;
+                }
+
+                if (!this.form.info) {
+                    this.$message.warning('请填写社团介绍');
+                    return;
+                }
+
+                if (!this.form.count) {
+                    this.$message.warning('请选择社团人数');
                     return;
                 }
 

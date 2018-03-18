@@ -4,6 +4,7 @@ import Admin from "../components/admin.vue";
 import Login from "../components/common/login.vue";
 import Register from "../components/common/register.vue";
 import Index from "../components/index.vue";
+import Word from "../components/word.vue";
 import ClubForm from "../components/club/club-form.vue";
 import ClubList from "../components/club/club-list.vue";
 import ClubJoin from "../components/club/club-join.vue";
@@ -58,6 +59,10 @@ export default new Router({
                     path: '/admin/user-form',
                     component: UserForm
                 },
+                {
+                    path: '/admin/word',
+                    component: Word
+                }
             ]
         },
         {

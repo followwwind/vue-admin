@@ -67,6 +67,31 @@
                                     <span style="margin-left: 10px">{{ scope.row.create_time}}</span>
                                 </template>
                             </el-table-column>
+
+                            <el-table-column label="状态" header-align="center" align="center">
+                                <template scope="scope">
+                                    <!-- <el-icon name="time"></el-icon> -->
+                                    <span>{{ scope.row.status == 0 ? '审核中' : (scope.row.status == 1 ? '审核通过' : '审核失败') }}</span>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label="操作" header-align="center" align="center">
+                                <template scope="scope">
+                                    <el-button
+                                        size="small"
+                                        type="danger"
+                                        v-show="scope.row.status != 0"
+                                        @click="handleStatus(scope.row, 0)">删除
+                                    </el-button>
+
+                                    <el-button
+                                        size="small"
+                                        type="success"
+                                        v-show="scope.row.status == 0"
+                                        @click="handleStatus(scope.row, 1)">审核
+                                    </el-button>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                 </el-card>
@@ -124,6 +149,38 @@
 
             onCancel() {
 
+            },
+
+            handleStatus(row, type){
+                if(type === 0){
+                    this.func.ajaxPost(this.api.deleteClubUser, {id: row.id}, res => {
+                        if (res.data.code === 200) {
+                            let index = this.clubPersons.indexOf(row);
+                            this.clubPersons.splice(index, 1);
+                            this.$message.success('删除成功');
+                        }
+                    });
+                }else if(type === 1){
+                    this.$confirm('确定审核通过该成员加入吗?', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      type: 'info'
+                    }).then(() => {
+                        this.func.ajaxPost(this.api.updateClubUser, {id: row.id, status: 1}, res => {
+                            console.log(res);
+                            if (res.data.code === 200) {
+                                let index = this.clubPersons.indexOf(row);
+                                this.clubPersons[index].status = 1;
+                                this.$message({type: 'success', message: '审核成功!'});
+                            }
+                        });
+                    }).catch(() => {
+                      this.$message({
+                        type: 'info',
+                        message: '取消审核'
+                      });          
+                    });
+                }
             },
 
             fetch(){
